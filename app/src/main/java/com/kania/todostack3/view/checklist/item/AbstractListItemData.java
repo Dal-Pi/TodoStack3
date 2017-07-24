@@ -1,4 +1,4 @@
-package com.kania.todostack3.view;
+package com.kania.todostack3.view.checklist.item;
 
 import android.view.View;
 
@@ -9,6 +9,10 @@ import com.kania.todostack3.data.TodoData;
  */
 
 public abstract class AbstractListItemData {
+
+    public static final int CHECK_ITEM = 0;
+    public static final int ADD_ITEM = 1;
+    public static final int REPEAT_OPTION_ITEM = 2;
 
     private TodoData mTodoData;
     private int mItemType;

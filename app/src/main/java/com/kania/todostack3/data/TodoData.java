@@ -16,4 +16,5 @@ public class TodoData {
     public String location;
     public long created;
     public long lastUpdated;
+    public boolean complete;
 }

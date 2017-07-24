@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.kania.todostack3.R;
+import com.kania.todostack3.view.checklist.CheckListFragment;
 
 public class MainActivity extends AppCompatActivity
         implements CheckListFragment.OnFragmentInteractionListener {

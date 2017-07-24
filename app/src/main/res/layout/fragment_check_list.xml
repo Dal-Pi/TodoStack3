@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.kania.todostack3.view.CheckListFragment">
+    tools:context="com.kania.todostack3.view.checklist.CheckListFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/frag_checklist_list"
