@@ -91,24 +91,24 @@ public class CheckListFragment extends Fragment {
         TodoData todo1 = new TodoData();
         todo1.id = 1;
         todo1.todoName = "first todo";
-        todo1.subjectOrder = 1;
-        todo1.complete = false;
+        todo1.subjectId = 1;
+        todo1.isCompleted = false;
         CheckableItemData item1 = new CheckableItemData(todo1);
         items.add(item1);
 
         TodoData todo2 = new TodoData();
         todo2.id = 2;
         todo2.todoName = "second todo";
-        todo2.subjectOrder = 1;
-        todo2.complete = true;
+        todo2.subjectId = 1;
+        todo2.isCompleted = true;
         CheckableItemData item2 = new CheckableItemData(todo2);
         items.add(item2);
 
         TodoData todo3 = new TodoData();
         todo3.id = 3;
         todo3.todoName = "third todo";
-        todo3.subjectOrder = 2;
-        todo3.complete = false;
+        todo3.subjectId = 2;
+        todo3.isCompleted = false;
         CheckableItemData item3 = new CheckableItemData(todo3);
         items.add(item3);
 

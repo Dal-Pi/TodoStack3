@@ -2,6 +2,100 @@
     <string name="app_name">TodoStack</string>
     <string name="action_settings">Settings</string>
 
+    <string name="cover_title">Todo Stack</string>
+    <string name="cover_subtitle">For Simplicity</string>
+
+    <string name="adding_text_new_todo">New Todo</string>
+    <string name="adding_text_on_new_todo">New Todo on</string>
+    <string name="adding_text_view_todo">Todo on</string>
+    <string name="title_text_on_new_subject">New Subject</string>
+
+    <string name="fab_create_subject">New\nSubject</string>
+    <string name="fab_create_todo">New\nTodo</string>
+    <string name="fab_add">Add</string>
+    <string name="fab_done">Done</string>
+
+
+    <string name="year">Year</string>
+    <string name="month">Month</string>
+    <string name="day">Day</string>
+    <string name="calendar">Calendar</string>
+    <string name="todo_name">Todo Name</string>
+    <string name="is_task">Task?</string>
+
+    <string name="subject_name">Subject Name</string>
+    <string name="subject_edit_name">Edit Name</string>
+    <string name="subject_move_left">Move Left</string>
+    <string name="subject_move_right">Move Right</string>
+    <string name="subject_delete">Delete Subject</string>
+    <string name="subject_view_all_todo">View Todo</string>
+
+    <string name="todo_initial_info">Loading..</string>
+    <string name="todo_done">Done</string>
+    <string name="todo_view_more">More...</string>
+
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="add">Add</string>
+    <string name="cancel">Cancel</string>
+    <string name="color">Color</string>
+
+
+    <string name="guide_text_default">Guide TextView.</string>
+    <string name="guide_text_mode_initial_setup">Select \"NEW SUBJECT\".</string>
+    <string name="guide_text_mode_no_selection">Select \"NEW TODO\" for create Todo.</string>
+    <string name="guide_text_suggest_select_subject">For adding Todo, select subject title.</string>
+    <string name="guide_text_mode_input_todo">Input information represents Todo.</string>
+    <string name="guide_text_mode_input_subject">Input \"Subject Name\" represents Todo(s).</string>
+    <string name="guide_text_mode_view_subject">Select action button for viewing all todo.</string>
+    <string name="guide_text_mode_view_todo">Select each todo text for done todo.</string>
+
+    <string name="dialog_progress_updating">Updating...</string>
+    <string name="dialog_select_subject_title">Select Subject to add Todo.</string>
+    <string name="dialog_select_subject_tip">Tip. You can skip this step by selecting Subject title on main screen.</string>
+    <string name="dialog_select_color_title">Select Subject represent Todo.</string>
+    <string name="dialog_update_subject_name">Change Subject name</string>
+    <string name="dialog_select_todo_title">Select Todo to be done</string>
+    <string name="dialog_select_todo_tip">Tip. You can skip this step by selecting Todo name on main screen.</string>
+    <string name="dialog_delete_subject_title">Delete below subject</string>
+    <string name="dialog_delete_subject_tip">You can delete subject after removing all Todo on this subject.\nReally delete?</string>
+    <string name="dialog_done_todo_title">Delete below todo as be done</string>
+    <string name="dialog_done_todo_option_title">Or, select another move option</string>
+    <string name="dialog_done_todo_option_tomorrow">Move to tomorrow</string>
+    <string name="dialog_done_todo_option_next_week">Move to next week</string>
+    <string name="dialog_done_todo_option_next_month">Move to next month</string>
+    <string name="dialog_done_todo_option_next_year">Move to next year</string>
+    <string name="dialog_done_todo_option_today">Move to today</string>
+    <string name="dialog_done_todo_option_task">Move to Task todo</string>
+    <string name="dialog_done_todo_option_custom">day move from today</string>
+
+    <string name="toast_waring_name_empty">Do not execute! Name is empty.</string>
+    <string name="toast_waring_input_slush">Do not execute! Cannot input "/" character.</string>
+    <string name="toast_waring_date_empty">There is empty space(s).</string>
+    <string name="toast_waring_wrong_year">Do not execute! Input valid Year.</string>
+    <string name="toast_waring_wrong_month">Do not execute! Input valid Month(1 ~ 12)</string>
+    <string name="toast_waring_wrong_day">Do not execute! Input valid Day(1 ~ last day each month)</string>
+    <string name="toast_waring_not_end_subject">Only the last subject can delete.\nMove subject to last using \"MOVE RIGHT\".</string>
+    <string name="toast_waring_remained_todos">Cannot delete subject. There are remained Todos.</string>
+
+    <string name="widget_title">Todo</string>
+    <string name="widget_empty">There is no Todo today.</string>
+
+    <string name="nav_menu_all_todo">View all Todo</string>
+    <string name="nav_menu_title_subjects">Subjects</string>
+
+    <string name="nav_drawer_open">Open navigation drawer</string>
+    <string name="nav_drawer_close">Close navigation drawer</string>
+
+    <string name="detail_all_title">All Subject</string>
+
+    <string name="card_desc_subject">Subject</string>
+    <string name="card_desc_due_date">Due Date</string>
+    <string name="card_desc_time">(will not use)</string>
+    <string name="card_desc_location">Location</string>
+    <string name="card_desc_created">Created</string>
+    <string name="card_desc_last_updated">Last Updated</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

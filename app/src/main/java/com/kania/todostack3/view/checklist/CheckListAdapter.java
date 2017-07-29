@@ -42,7 +42,7 @@ public class CheckListAdapter extends RecyclerView.Adapter {
         TodoData todoData = mItems.get(position).getTodoData();
         if (getItemViewType(position) == AbstractListItemData.CHECK_ITEM) {
             CheckableViewHolder checkableHolder = (CheckableViewHolder)holder;
-            checkableHolder.mCheckBox.setChecked(todoData.complete);
+            checkableHolder.mCheckBox.setChecked(todoData.isCompleted);
             checkableHolder.mTextView.setText(todoData.todoName);
         }
     }
