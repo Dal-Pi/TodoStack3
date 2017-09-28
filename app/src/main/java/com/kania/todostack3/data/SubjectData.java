@@ -6,7 +6,7 @@ package com.kania.todostack3.data;
 
 public class SubjectData {
 
-    public static final int NON_SAVED_ID = -1;
+    //public static final int NON_SAVED_ID = -1;
     public static final String DEFAULT_COLOR = "#FF555555";
 
     //builder member
@@ -61,7 +61,7 @@ public class SubjectData {
             this.id = id;
             this.order = order;
             this.subjectName = subjectName;
-            this.color = "#FF555555";
+            this.color = DEFAULT_COLOR;
         }
 
         public Builder color(String color) {

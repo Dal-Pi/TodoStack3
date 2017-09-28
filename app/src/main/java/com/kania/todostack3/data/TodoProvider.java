@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+import android.util.SparseArray;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,11 +24,11 @@ public class TodoProvider {
     private static TodoStackDbHelper dbHelper;
     private static SQLiteDatabase todoStackDb;
 
-    private static HashMap<Integer, SubjectData> subjectMap;
-    private static HashMap<Integer, TodoData> todoMap;
+    private static SparseArray<SubjectData> subjectMap;
+    private static SparseArray<TodoData> todoMap;
 
     private static ArrayList<SubjectData> subjectList;
-    private static ArrayList<TodoData> todoList;
+    private static ArrayList<TodoData> todoTree;
 
     public static TodoProvider getInstance(Context applicationContext) {
         if (instance == null) {
@@ -40,10 +41,10 @@ public class TodoProvider {
     private TodoProvider(Context context) {
         mContext = context;
 
-        subjectMap = new HashMap<Integer, SubjectData>();
-        subjectList = new ArrayList<SubjectData>();
-        todoMap = new HashMap<Integer, TodoData>();
-        todoList = new ArrayList<TodoData>();
+        subjectMap = new SparseArray<>();
+        subjectList = new ArrayList<>();
+        todoMap = new SparseArray<>();
+        todoTree = new ArrayList<>();
     }
 
     public static void initData() {
@@ -58,12 +59,11 @@ public class TodoProvider {
 
     private static void getSubjectFromDb() {
         if (subjectMap == null)
-            subjectMap = new HashMap<Integer, SubjectData>();
+            subjectMap = new SparseArray<>();
         if (subjectList == null)
-            subjectList = new ArrayList<SubjectData>();
+            subjectList = new ArrayList<>();
         subjectMap.clear();
         subjectList.clear();
-
 
         final String[] projection = {
                 SubjectEntry._ID,
@@ -76,21 +76,12 @@ public class TodoProvider {
                 projection, null, null, null, null, sortOrder);
 //        subjectCursor.moveToFirst();
         while (subjectCursor.moveToNext()) {
-            SubjectData subject = new SubjectData();
-            subject.id = subjectCursor.
-                    getInt(subjectCursor.getColumnIndexOrThrow(SubjectEntry._ID));
-            subject.subjectName = subjectCursor.
-                    getString(subjectCursor.getColumnIndexOrThrow(SubjectEntry.SUBJECT_NAME));
-            try {
-                int color = subjectCursor.
-                        getInt(subjectCursor.getColumnIndexOrThrow(SubjectEntry.COLOR));
-                subject.color = color;
-            } catch (IllegalArgumentException e) {
-                Log.e("TodoStck", "error on getting color from Subject DB");
-                subject.color = ColorProvider.getDefaultColor();
-            }
-            subject.order = subjectCursor.
-                    getInt(subjectCursor.getColumnIndexOrThrow(SubjectEntry.ORDER));
+            SubjectData subject = new SubjectData.Builder(
+                    subjectCursor.getInt(subjectCursor.getColumnIndexOrThrow(SubjectEntry._ID)),
+                    subjectCursor.getInt(subjectCursor.getColumnIndexOrThrow(SubjectEntry.ORDER)),
+                    subjectCursor.getString(subjectCursor.getColumnIndexOrThrow(SubjectEntry.SUBJECT_NAME)))
+                    .color(ColorProvider.getDefaultColorString())
+                    .build();
 
             subjectList.add(subject);
             subjectMap.put(subject.order, subject);
@@ -99,59 +90,56 @@ public class TodoProvider {
 
     private static void getTodoFromDb() {
         if (todoMap == null)
-            todoMap = new HashMap<Integer, TodoData>();
-        if (todoList == null)
-            todoList = new ArrayList<TodoData>();
+            todoMap = new SparseArray<>();
+        if (todoTree == null)
+            todoTree = new ArrayList<>();
         todoMap.clear();
-        todoList.clear();
+        todoTree.clear();
 
         final String[] projection = {
                 TodoEntry._ID,
-                TodoEntry.TODO_NAME,
                 TodoEntry.SUBJECT_ORDER,
-                TodoEntry.DATE,
-                TodoEntry.TYPE,
+                TodoEntry.TODO_NAME,
+                TodoEntry.PARENT,
+                TodoEntry.COMPLETED,
+                TodoEntry.TARGET_DATE,
                 TodoEntry.TIME_FROM,
                 TodoEntry.TIME_TO,
-                TodoEntry.LOCATION,
                 TodoEntry.CREATED_DATE,
-                TodoEntry.LAST_UPDATED_DATE
+                TodoEntry.LAST_UPDATED_DATE,
+                TodoEntry.LOCATION
         };
         Cursor todoCursor = todoStackDb.query(TodoEntry.TABLE_NAME,
                 projection, null, null, null, null, null);
 //        todoCursor.moveToFirst();
         while (todoCursor.moveToNext()) {
-            TodoData todo = new TodoData();
-            todo.id = todoCursor.
-                    getInt(todoCursor.getColumnIndexOrThrow(TodoEntry._ID));
-            todo.todoName = todoCursor.
-                    getString(todoCursor.getColumnIndexOrThrow(TodoEntry.TODO_NAME));
-            todo.subjectId = todoCursor.
-                    getInt(todoCursor.getColumnIndexOrThrow(TodoEntry.SUBJECT_ORDER));
-            todo.date = todoCursor.
-                    getLong(todoCursor.getColumnIndexOrThrow(TodoEntry.DATE));
-            //TODO remove
-//            todo.type = todoCursor.
-//                    getInt(todoCursor.getColumnIndexOrThrow(TodoEntry.TYPE));
-            todo.timeFrom = todoCursor.
-                    getLong(todoCursor.getColumnIndexOrThrow(TodoEntry.TIME_FROM));
-            todo.timeTo = todoCursor.
-                    getLong(todoCursor.getColumnIndexOrThrow(TodoEntry.TIME_TO));
-            todo.location = todoCursor.
-                    getString(todoCursor.getColumnIndexOrThrow(TodoEntry.LOCATION));
-            todo.created = todoCursor.getLong(
-                    todoCursor.getColumnIndexOrThrow(TodoEntry.CREATED_DATE));
-            todo.lastUpdated = todoCursor.getLong(
-                    todoCursor.getColumnIndexOrThrow(TodoEntry.LAST_UPDATED_DATE));
-            int compTemp = todoCursor.getInt(
-                    todoCursor.getColumnIndexOrThrow(TodoEntry.COMPLETED));
-            todo.isCompleted = compTemp > 0;
+            TodoData todo = new TodoData.Builder(
+                    todoCursor.getInt(todoCursor.getColumnIndexOrThrow(TodoEntry._ID)),
+                    todoCursor.getInt(todoCursor.getColumnIndexOrThrow(TodoEntry.SUBJECT_ORDER)),
+                    todoCursor.getInt(todoCursor.getColumnIndexOrThrow(TodoEntry.PARENT)),
+                    todoCursor.getString(todoCursor.getColumnIndexOrThrow(TodoEntry.TODO_NAME)))
+                    .completed(todoCursor.getInt(todoCursor.getColumnIndexOrThrow(TodoEntry.COMPLETED)) > 0)
+                    .targetDate(todoCursor.getInt(todoCursor.getColumnIndexOrThrow(TodoEntry.TARGET_DATE)))
+                    .createdDate(todoCursor.getInt(todoCursor.getColumnIndexOrThrow(TodoEntry.CREATED_DATE)))
+                    .updatedDate(todoCursor.getInt(todoCursor.getColumnIndexOrThrow(TodoEntry.LAST_UPDATED_DATE)))
+                    .location(todoCursor.getString(todoCursor.getColumnIndexOrThrow(TodoEntry.LOCATION)))
+                    .build();
 
-            todoList.add(todo);
-            todoMap.put(todo.id, todo);
+            todoMap.append(todo.getId(), todo);
+            if (todo.getParentId() != TodoData.ROOT_PARENT_TODO_ID) {
+                TodoData parent = todoMap.get(todo.getParentId());
+                if (parent != null)
+                    parent.addChild(todo.getId());
+                else {
+                    Log.e("TodoStack", "error case! parent is not exist!");
+                    todoTree.add(todo);
+                }
+            } else
+                todoTree.add(todo);
         }
     }
 
+    //TODO saved 170928
     public static ArrayList<SubjectData> getAllSubject() {
         ArrayList<SubjectData> allSubjectData = new ArrayList<SubjectData>();
 //        Iterator<Integer> it = subjectMap.keySet().iterator();

@@ -11,8 +11,8 @@ import static com.kania.todostack3.data.TodoStackContract.TodoEntry;
  * Created by user on 2016-01-10.
  */
 public class TodoStackDbHelper extends SQLiteOpenHelper {
-    public static final int DATABASE_VERSION = 3;
-    public static final String DATABASE_NAME = "todostack.db";
+    public static final int DATABASE_VERSION = 1;
+    public static final String DATABASE_NAME = "todostack3.db";
 
     private static final String TEXT_TYPE = " TEXT";
     private static final String INTEGER_TYPE = " INTEGER";
@@ -30,17 +30,16 @@ public class TodoStackDbHelper extends SQLiteOpenHelper {
     private static final String SQL_CREATE_TODO_ENTRIES =
             "CREATE TABLE " + TodoEntry.TABLE_NAME + " (" +
                     TodoEntry._ID + " INTEGER PRIMARY KEY," +
-                    TodoEntry.TODO_NAME + TEXT_TYPE + COMMA_SEP +
                     TodoEntry.SUBJECT_ORDER + INTEGER_TYPE + COMMA_SEP +
-                    TodoEntry.DATE + INTEGER_TYPE + COMMA_SEP +
-                    //TODO remove
-//                    TodoEntry.TYPE + TEXT_TYPE + COMMA_SEP +
+                    TodoEntry.TODO_NAME + TEXT_TYPE + COMMA_SEP +
+                    TodoEntry.PARENT + INTEGER_TYPE + COMMA_SEP +
+                    TodoEntry.COMPLETED + INTEGER_TYPE + COMMA_SEP +
+                    TodoEntry.TARGET_DATE + INTEGER_TYPE + COMMA_SEP +
                     TodoEntry.TIME_FROM + INTEGER_TYPE + COMMA_SEP +
                     TodoEntry.TIME_TO + INTEGER_TYPE + COMMA_SEP +
-                    TodoEntry.LOCATION + TEXT_TYPE + COMMA_SEP +
                     TodoEntry.CREATED_DATE + INTEGER_TYPE + COMMA_SEP +
-                    TodoEntry.LAST_UPDATED_DATE + INTEGER_TYPE + COMMA_SEP +
-                    TodoEntry.COMPLETED + INTEGER_TYPE +
+                    TodoEntry.LAST_UPDATED_DATE + TEXT_TYPE + COMMA_SEP +
+                    TodoEntry.LOCATION + INTEGER_TYPE +
                     " )";
 
     private static final String SQL_DELETE_SUBJECT_ENTRIES =

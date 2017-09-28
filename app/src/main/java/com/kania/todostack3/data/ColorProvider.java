@@ -53,12 +53,16 @@ public class ColorProvider {
 //        return Color.parseColor(COLOR_STRING_DEFAULT_BLACK);
         return Color.parseColor(COLOR_STRING_DEFAULT_GRAY);
     }
+    public static String getDefaultColorString() {
+//        return COLOR_STRING_DEFAULT_BLACK;
+        return COLOR_STRING_DEFAULT_GRAY;
+    }
 
     public static int getTodayColor() {
         return Color.parseColor(COLOR_STRING_TODAY);
     }
 
-    public static ArrayList<Integer> getPreloadedcolors() {
+    public static ArrayList<Integer> getPreloadedColors() {
         if (alColors.size() < 0) {
             for (String colorString : preloadedcolorStrings) {
                 alColors.add(Color.parseColor(colorString));
