@@ -7,7 +7,8 @@ import android.util.Log;
 import android.util.SparseArray;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.Comparator;
 
 import static com.kania.todostack3.data.TodoStackContract.SubjectEntry;
 import static com.kania.todostack3.data.TodoStackContract.TodoEntry;
@@ -19,16 +20,17 @@ public class TodoProvider {
 
     public static TodoProvider instance;
 
-    private static Context mContext;
+    private Context mContext;
 
-    private static TodoStackDbHelper dbHelper;
-    private static SQLiteDatabase todoStackDb;
+    private TodoStackDbHelper dbHelper;
+    private SQLiteDatabase todoStackDb;
 
-    private static SparseArray<SubjectData> subjectMap;
-    private static SparseArray<TodoData> todoMap;
+    private SparseArray<SubjectData> subjectMap;
+    private ArrayList<SubjectData> subjectList;
 
-    private static ArrayList<SubjectData> subjectList;
-    private static ArrayList<TodoData> todoTree;
+    private SparseArray<TodoData> todoMap;
+    private ArrayList<TodoData> todoTree;
+    private ArrayList<TodoData> todoListSorted;
 
     public static TodoProvider getInstance(Context applicationContext) {
         if (instance == null) {
@@ -45,9 +47,10 @@ public class TodoProvider {
         subjectList = new ArrayList<>();
         todoMap = new SparseArray<>();
         todoTree = new ArrayList<>();
+        todoListSorted = new ArrayList<>();
     }
 
-    public static void initData() {
+    public void initData() {
         dbHelper = new TodoStackDbHelper(mContext);
         todoStackDb = dbHelper.getReadableDatabase();
 
@@ -55,9 +58,11 @@ public class TodoProvider {
         getTodoFromDb();
 
         todoStackDb.close();
+
+        makeSortedTodoList();
     }
 
-    private static void getSubjectFromDb() {
+    private void getSubjectFromDb() {
         if (subjectMap == null)
             subjectMap = new SparseArray<>();
         if (subjectList == null)
@@ -88,7 +93,7 @@ public class TodoProvider {
         }
     }
 
-    private static void getTodoFromDb() {
+    private void getTodoFromDb() {
         if (todoMap == null)
             todoMap = new SparseArray<>();
         if (todoTree == null)
@@ -139,9 +144,41 @@ public class TodoProvider {
         }
     }
 
-    //TODO saved 170928
-    public static ArrayList<SubjectData> getAllSubject() {
-        ArrayList<SubjectData> allSubjectData = new ArrayList<SubjectData>();
+    private void makeSortedTodoList() {
+        todoListSorted.clear();
+
+        Collections.sort(todoTree, new Comparator<TodoData>() {
+            @Override
+            public int compare(TodoData t1, TodoData t2) {
+                if (t1.getCreatedDate() < t2.getCreatedDate())
+                    return -1;
+                else if (t1.getCreatedDate() > t2.getCreatedDate())
+                    return 1;
+                else
+                    return 0;
+            }
+        });
+
+        for (TodoData todo : todoTree) {
+            todoListSorted.add(todo);
+            dspTodoTree(todo.getChildren());
+        }
+    }
+
+    private void dspTodoTree(ArrayList<Integer> children) {
+        for (int key : children) {
+            TodoData target = todoMap.get(key);
+            if (target != null) {
+                todoListSorted.add(target);
+                if (target.getChildren().size() > 0) {
+                    dspTodoTree(target.getChildren());
+                }
+            }
+        }
+    }
+
+    public ArrayList<SubjectData> getSubjectList() {
+        ArrayList<SubjectData> allSubjectData = new ArrayList<>();
 //        Iterator<Integer> it = subjectMap.keySet().iterator();
 //        while(it.hasNext()) {
 //            allSubjectData.add(subjectMap.get(it.next()));
@@ -152,51 +189,38 @@ public class TodoProvider {
         return allSubjectData;
     }
 
-    public static ArrayList<TodoData> getAllTodo() {
+    public ArrayList<TodoData> getTodoList() {
         ArrayList<TodoData> allTodoData = new ArrayList<TodoData>();
 //        Iterator<Integer> it = todoMap.keySet().iterator();
 //        while(it.hasNext()) {
 //            allTodoData.add(todoMap.get(it.next()));
 //        }
-        for (TodoData todo : todoList){
+        for (TodoData todo : todoListSorted){
             allTodoData.add(todo);
         }
-
         return allTodoData;
     }
 
-    public static ArrayList<TodoData> getTodoList(int subjectOrder) {
-        ArrayList<TodoData> todos = new ArrayList<TodoData>();
-        for (TodoData todo : todoList){
-            if (todo.subjectId == subjectOrder) {
-                todos.add(todo);
-            }
-        }
-
-        return todos;
-    }
-
-    public static SubjectData getSubjectByOrder(int subOrder) {
+    public SubjectData getSubjectByOrder(int subOrder) {
 //        Log.d("TodoStack", "[getSubjectByOrder] subOrder = " + subOrder);
         return subjectMap.get(subOrder);
     }
 
-    public static TodoData getTodoById(int todoId) {
+    public TodoData getTodoById(int todoId) {
 //        Log.d("TodoStack", "[getTodoById] subId = " + todoId);
         return todoMap.get(todoId);
     }
 
-    public static int getSubjectCount() {
+    public int getSubjectCount() {
         return subjectMap.size();
     }
 
-    public static int getTodoCount(int subjectOrder) {
+    public int getTodoCount(int subjectOrder) {
         int ret = 0;
-        for (TodoData td : todoList) {
-            if (td.subjectId == subjectOrder)
+        for (TodoData td : todoListSorted) {
+            if (td.getSubjectId() == subjectOrder)
                 ret++;
         }
-
         return ret;
     }
 }
